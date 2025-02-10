@@ -1,0 +1,126 @@
+# Introducción a Bases de Datos y SQLite en Python
+
+## 1. Conceptos Básicos
+
+### ¿Qué es una Base de Datos?
+Una base de datos es una colección organizada de datos que se almacenan y gestionan de manera eficiente para su acceso, manipulación y consulta. Las bases de datos permiten almacenar grandes volúmenes de información de manera estructurada y facilitar su recuperación.
+
+### SQL vs NoSQL
+Las bases de datos se pueden clasificar en dos tipos principales:
+
+1. **Bases de Datos Relacionales (SQL)**
+   - Utilizan tablas con filas y columnas.
+   - Utilizan el Lenguaje de Consulta Estructurado (SQL) para manipular los datos.
+   - Son adecuadas para datos estructurados y relaciones complejas.
+   - Ejemplos: MySQL, PostgreSQL, SQLite.
+
+2. **Bases de Datos No Relacionales (NoSQL)**
+   - No usan tablas fijas, sino estructuras como documentos, grafos o almacenes clave-valor.
+   - Son más flexibles y escalables para grandes volúmenes de datos.
+   - Adecuadas para aplicaciones que requieren alta disponibilidad y escalabilidad horizontal.
+   - Ejemplos: MongoDB, Redis, Cassandra.
+
+### Ventajas de Usar Bases de Datos
+- **Eficiencia:** Permiten almacenar y recuperar grandes cantidades de datos rápidamente.
+- **Integridad:** Aplican restricciones para garantizar la coherencia de los datos.
+- **Escalabilidad:** Pueden manejar un crecimiento de datos significativo.
+- **Seguridad:** Ofrecen mecanismos de control de acceso y autenticación.
+
+## 2. Instalación y Uso de SQLite en Python con sqlite3
+
+### ¿Qué es SQLite?
+SQLite es un sistema de gestión de bases de datos ligero y autónomo que almacena la información en un solo archivo. Es ideal para aplicaciones que necesitan una base de datos integrada sin configuraciones complejas.
+
+### Instalación
+SQLite viene preinstalado con Python, por lo que no es necesario instalar nada adicional. Sin embargo, puedes verificar su disponibilidad con el siguiente comando:
+
+```sh
+python -c "import sqlite3; print('SQLite disponible')"
+```
+
+### Crear y Conectar una Base de Datos
+Para comenzar a usar SQLite en Python, se usa el módulo `sqlite3`:
+
+```python
+import sqlite3
+
+# Conectar a la base de datos (o crearla si no existe)
+conexion = sqlite3.connect("mi_base_de_datos.db")
+
+# Crear un cursor para ejecutar comandos SQL
+cursor = conexion.cursor()
+
+# Cerrar la conexión
+conexion.close()
+```
+
+## 3. Operaciones CRUD con SQLite
+Las operaciones CRUD (Create, Read, Update, Delete) permiten gestionar los datos en una base de datos.
+
+### 3.1 Crear una Tabla (CREATE)
+```python
+conexion = sqlite3.connect("mi_base_de_datos.db")
+cursor = conexion.cursor()
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL,
+        edad INTEGER
+    )
+''')
+
+conexion.commit()
+conexion.close()
+```
+
+### 3.2 Insertar Datos (INSERT)
+```python
+conexion = sqlite3.connect("mi_base_de_datos.db")
+cursor = conexion.cursor()
+
+cursor.execute("INSERT INTO usuarios (nombre, edad) VALUES (?, ?)", ("Juan", 30))
+
+conexion.commit()
+conexion.close()
+```
+
+### 3.3 Leer Datos (SELECT)
+```python
+conexion = sqlite3.connect("mi_base_de_datos.db")
+cursor = conexion.cursor()
+
+cursor.execute("SELECT * FROM usuarios")
+usuarios = cursor.fetchall()
+
+for usuario in usuarios:
+    print(usuario)
+
+conexion.close()
+```
+
+### 3.4 Actualizar Datos (UPDATE)
+```python
+conexion = sqlite3.connect("mi_base_de_datos.db")
+cursor = conexion.cursor()
+
+cursor.execute("UPDATE usuarios SET edad = ? WHERE nombre = ?", (35, "Juan"))
+
+conexion.commit()
+conexion.close()
+```
+
+### 3.5 Eliminar Datos (DELETE)
+```python
+conexion = sqlite3.connect("mi_base_de_datos.db")
+cursor = conexion.cursor()
+
+cursor.execute("DELETE FROM usuarios WHERE nombre = ?", ("Juan",))
+
+conexion.commit()
+conexion.close()
+```
+
+## Conclusión
+SQLite es una excelente opción para gestionar bases de datos livianas en Python. Proporciona un almacenamiento estructurado con operaciones CRUD fáciles de implementar. Con esta introducción, tienes las bases necesarias para comenzar a trabajar con bases de datos en tus proyectos.
+
