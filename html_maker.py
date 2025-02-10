@@ -1,5 +1,7 @@
 import re
 from pathlib import Path
+from modules.lista import comprobar_lista
+from modules.saltos_pagina import del_saltos, app_saltos
 
 ruta_texto = Path(__file__).parent/"texto.txt"
 ruta_html = Path(__file__).parent/"documento.html"
@@ -35,7 +37,13 @@ def leer(ruta): # Lee el archivo de la ruta y devuelve el contenido
 def convert_html(texto): # Devuelve el texto formateado a html
     html = ""
     # ==========
-    
+    # Formato de listas
+    texto, index_list = del_saltos(texto) # Elimina saltos de pagina
+    texto = comprobar_lista(texto)
+    texto = app_saltos(texto, index_list) # Devuelve los saltos de pagina en los indices de la lista
+    # Formato de bloques
+    # Formato de headers
+    # Formatos de contenido
     # ==========
     return html
 
