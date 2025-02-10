@@ -4,44 +4,39 @@ from pathlib import Path
 ruta_texto = Path(__file__).parent/"texto.txt"
 ruta_html = Path(__file__).parent/"documento.html"
 
-patron_lista = [{"h1":r"#{1}"}]
+patrones_exteriores = {
+        "pre":r"^`{3}(.*)",    # Bloque de codigo
+        "ul":r"^-{1} (.+)",     # Lista desordenada
+        "ol":r"\d\. (.+)",      # Lista ordenada
+        "h1":r"^#{1} (.+)",     # Header 1
+        "h2":r"^#{2} (.+)",     # Header 2
+        "h3":r"^#{3} (.+)",     # Header 3
+        "h4":r"^#{4} (.+)",     # Header 4
+        "h5":r"^#{5} (.+)",     # Header 5
+        "h6":r"^#{6} (.+)",     # Header 6
+    }
+
+patrones_interiores = {
+    "blockquote":r"\>(.*?)",        # Citado
+    "strong":r"\*\*(.*?)\*\*",      # Negrita
+    "em":r"\*(.*?)\*",              # Cursiva
+    "del":r"\~\~(.*?)\~\~",         # Tachada
+    "code":r"\`(.*?)\`",            # Formato de codigo
+    "a":r"\[(.*?)\]\((.*?)\)",      # Enlace
+    "img":r"\!\[(.*?)\]\((.*?)\)",  # Imagen
+}
+
 
 def leer(ruta): # Lee el archivo de la ruta y devuelve el contenido
     with open(ruta, "r", encoding="utf-8") as file:
         datos = file.read()
-    return datos
+    return datos.split("\n")
 
 def convert_html(texto): # Devuelve el texto formateado a html
-    texto = texto.split("\n")
     html = ""
-    for i, linea in enumerate(texto):
-        if not linea:
-            html += "<br />"
-        elif linea.startswith("#"):
-            html += "<h1>{}</h1>".format(linea.strip("# "))
-        elif linea.startswith("##"):
-            html += "<h1>{}</h1>".format(linea.strip("## "))
-        elif linea.startswith("###"):
-            html += "<h1>{}</h1>".format(linea.strip("### "))
-        elif linea.startswith("####"):
-            html += "<h1>{}</h1>".format(linea.strip("#### "))
-        elif linea.startswith("#####"):
-            html += "<h1>{}</h1>".format(linea.strip("##### "))
-        elif linea.startswith("######"):
-            html += "<h1>{}</h1>".format(linea.strip("###### "))
-        elif linea.startswith("```"):
-            j = i+1
-            while True:
-                if texto[j].startswith("```"):
-                    break
-                else:
-                    j += 1
-        elif linea:
-            print("")
-        elif linea:
-            print("")
+    # ==========
     
-    
+    # ==========
     return html
 
 def almacenar(ruta, texto_html): # Almacena el contenido de 'texto_html' en un archivo html con una plantilla
