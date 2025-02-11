@@ -1,24 +1,12 @@
 import re
 from pathlib import Path
 from modules.headers import del_header_format, app_header_format
-from modules.lista import sep_lista, app_lista
+from modules.lista import sep_lista, app_lista, format_lista
 from modules.saltos_pagina import del_saltos, app_saltos
 from modules.bloque import sep_bloque, app_bloque
 
 ruta_texto = Path(__file__).parent/"texto.txt"
 ruta_html = Path(__file__).parent/"documento.html"
-
-patrones_exteriores = {
-        "pre":r"^`{3}(.*)",    # Bloque de codigo
-        "ul":r"^-{1} (.+)",     # Lista desordenada
-        "ol":r"\d\. (.+)",      # Lista ordenada
-        "h1":r"^#{1} (.+)",     # Header 1
-        "h2":r"^#{2} (.+)",     # Header 2
-        "h3":r"^#{3} (.+)",     # Header 3
-        "h4":r"^#{4} (.+)",     # Header 4
-        "h5":r"^#{5} (.+)",     # Header 5
-        "h6":r"^#{6} (.+)",     # Header 6
-    }
 
 patrones_interiores = {
     "blockquote":r"\>(.*?)",        # Citado

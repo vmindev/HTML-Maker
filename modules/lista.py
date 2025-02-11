@@ -1,5 +1,21 @@
 import re
 
+texto = [
+    "# Titulo 1",
+    "1. Item ",
+    "   - Item ",
+    "   - Item ",
+    "# Titulo 2",
+    "2. Item ",
+    "# Titulo 3",
+    "3. Item ",
+    "   - Item ",
+    "   - Item ",
+    "      - Item ",
+    "      - Item ",
+    "         - Item "
+]
+
 patrones = {
     "ul":r"^( *)(-) (.+)",     # Lista desordenada
     "ol":r"^( *)(\d+\.) (.+)"     # Lista ordenada
@@ -12,65 +28,59 @@ def sep_lista(texto): # Devuelve el texto original sin listas y un diccionario {
         if match:=re.match(patrones["ul"], linea): # Linea tiene formato de lista desordenada
             tag = "ul"
             indent, _, content = match.groups()
+            content = "<li>{}</li>".format(content)
             texto_dict.update({i:[content, len(indent)//3, tag]})
         elif match:=re.match(patrones["ol"], linea): # Linea tiene formato de lista ordenada
             tag = "ul"
             indent, _, content = match.groups()
+            content = "<li>{}</li>".format(content)
             texto_dict.update({i:[content, len(indent), tag]})
         else:
             texto_no_list.append(linea)
     
     return texto_no_list, texto_dict
 
-def formato_lista(lista_dict):
-    for lista in lista_dict.values():
+def format_lista(diccionario): # Devuelve el diccionario con el texto formateado
+    # Creamos un array con el contenido del diccionario que necesitamos
+    array = []
+    indices_lista = []
+    for indice, elem in diccionario.items():
+        array.append([elem[0], elem[1], elem[2]]) # [0]=linea | [1]=nivel de identacion | [2]= etiqueta
+        indices_lista.append(indice)
+
+    
+    # Formateamos las lineas
+    diccionario_nuevo = {}
+    buffer = []
+    for i,lista in enumerate(array):
+        '''Asignamos valores necesarios'''
+        linea = lista[0]
+        act_lvl = lista[1]
+        tag = lista[2]
+        # Calculamos el nivel de identación próximo
+        if i == (len(array)-1): # Última línea
+            prox_lvl = -1
+        else:
+            prox_lvl = array[i+1][1]
         
-        pass
+        '''Verificamos si hay que abrir una nueva lista'''
+        if act_lvl < prox_lvl: # Hay que abrir lista
+            linea = f"<{tag}>{linea}" # Añadimos el tag a la izquierda para abrir lista
+            buffer.append(tag) # Añadimos el tag al buffer
+        '''Verificamos si hay que cerrar una lista'''
+        if act_lvl > prox_lvl: # Hay que cerrar lista
+            for _ in range(act_lvl-prox_lvl): # Se repite tantas veces como tags haya que cerrar
+                linea += "</{}>".format(buffer.pop()) # Añadimos el tag al final
+
+        diccionario_nuevo.update({indices_lista[i]: linea})
+    
+    
+        
+    return diccionario_nuevo
 
 def app_lista(texto):
-    texto = texto.copy()
-    tags = []
-    level = -1
-    level_anterior = -1
-    for i, linea in enumerate(texto):
-        #===== Comprobamos el valor de la linea =====
-        # Comprobamos si no es una lista
-        if not (re.match(patrones["ul"],linea) or re.match(patrones["ol"],linea)):
-            level = -1
-        else: # Es una lista
-            # Lista desordenada
-            if match:= re.match(patrones["ul"],linea):
-                tag = "ul"
-                indent, _, content = match.groups()
-                level_anterior = level
-                level = len(indent) // 2 # Nivel de identación de la línea
-            # Lista ordenada
-            elif match:= re.match(patrones["ol"],linea):
-                tag = "ol"
-                indent, _, content = match.groups()
-                level_anterior = level
-                level = len(indent) // 2 # Nivel de identación de la línea
-        
-        '''Verificamos lo que se debe hacer a la lista'''
-        if level == -1: # No es lista
-            # Comprobamos si la linea anterior es una lista
-            if level_anterior != -1: # Si es una lista, cerramos la lista anterior
-                for _ in range(level_anterior-level):
-                    texto[i-1] += f"</{tags.pop()}>" 
-            else: # No es una lista
-                pass
-        
-        elif level > level_anterior: # Lista nueva
-            # Añadimos la apertura de lista
-            texto[i] = f"<{tag}>"+f"<li>{content}</li>"
-            # Añadimos el tag de apertura a la lista de tags
-            tags.append(tag)
-        
-        elif level == level_anterior: # Sigue la lista
-            texto[i] = f"<li>{content}</li>"
-        elif level < level_anterior: # Cerramos la lista anterior
-            for _ in range(level_anterior-level):
-                texto[i-1] += f"</{tags.pop()}>"
-            texto[i] = f"<li>{content}</li>"
-        
-    return texto
+    return
+
+texto, diccionario = sep_lista(texto)
+format_lista(diccionario)
+pass
