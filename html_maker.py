@@ -1,7 +1,9 @@
 import re
 from pathlib import Path
-from modules.lista import comprobar_lista
+from modules.headers import del_header_format, app_header_format
+from modules.lista import sep_lista, app_lista
 from modules.saltos_pagina import del_saltos, app_saltos
+from modules.bloque import sep_bloque, app_bloque
 
 ruta_texto = Path(__file__).parent/"texto.txt"
 ruta_html = Path(__file__).parent/"documento.html"
@@ -36,15 +38,17 @@ def leer(ruta): # Lee el archivo de la ruta y devuelve el contenido
 
 def convert_html(texto): # Devuelve el texto formateado a html
     html = ""
-    # ==========
-    # Formato de listas
-    texto, index_list = del_saltos(texto) # Elimina saltos de pagina
-    texto = comprobar_lista(texto)
-    texto = app_saltos(texto, index_list) # Devuelve los saltos de pagina en los indices de la lista
-    # Formato de bloques
-    # Formato de headers
-    # Formatos de contenido
-    # ==========
+    # ========== Guardar indices a parte ==========
+    # Saltos de pagina
+    texto, sp_list = del_saltos(texto) # Elimina las lineas con saltos de pagina
+    # Headers
+    texto, headers_dict = del_header_format(texto) # Elimina las lineas con headers
+    # ========== Separamos el texto en diferentes bloques ==========
+    # Listas
+    texto, lista_dict = sep_lista(texto) # Elimina las lineas con formato de lista y lo guarda en un diccionario {index:[linea_content, indent_level, tag]}
+    # Bloques de codigo
+    texto, bloque_dict = sep_bloque(texto)
+    
     return html
 
 def almacenar(ruta, texto_html): # Almacena el contenido de 'texto_html' en un archivo html con una plantilla

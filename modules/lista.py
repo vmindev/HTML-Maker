@@ -5,7 +5,29 @@ patrones = {
     "ol":r"^( *)(\d+\.) (.+)"     # Lista ordenada
 }
 
-def comprobar_lista(texto):
+def sep_lista(texto): # Devuelve el texto original sin listas y un diccionario {index:[linea_content, indent_level, tag]}
+    texto_no_list = []
+    texto_dict = {}
+    for i, linea in enumerate(texto):
+        if match:=re.match(patrones["ul"], linea): # Linea tiene formato de lista desordenada
+            tag = "ul"
+            indent, _, content = match.groups()
+            texto_dict.update({i:[content, len(indent)//3, tag]})
+        elif match:=re.match(patrones["ol"], linea): # Linea tiene formato de lista ordenada
+            tag = "ul"
+            indent, _, content = match.groups()
+            texto_dict.update({i:[content, len(indent), tag]})
+        else:
+            texto_no_list.append(linea)
+    
+    return texto_no_list, texto_dict
+
+def formato_lista(lista_dict):
+    for lista in lista_dict.values():
+        
+        pass
+
+def app_lista(texto):
     texto = texto.copy()
     tags = []
     level = -1

@@ -21,7 +21,7 @@ def del_saltos(texto_lista): # Devuelve el texto sin saltos de linea y una lista
 def app_saltos(texto_lista, index_list): # Devuelve el texto proporcionado con los saltos de linea añadidos en cada indice de 'index_list'
     texto = texto_lista.copy()
     for index in reversed(index_list):
-        texto.insert(index, "")
+        texto.insert(index, "<br />")
     return texto
 
 texto, indices = del_saltos(texto)
