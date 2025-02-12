@@ -1,43 +1,33 @@
+import re
+import markdown
 from pathlib import Path
 
-ruta_texto = Path(__file__).parent/"texto.txt"
-ruta_html = Path(__file__).parent/"documento.html"
+ruta_texto:Path = Path(__file__).parent/"texto.txt"
+ruta_html_nuevo:Path = Path(__file__).parent/"documento.html"
+ruta_html_base:Path = Path(__file__).parent/"base.html"
 
-def leer(ruta): # Lee el archivo de la ruta y devuelve el contenido
-    with open(ruta, "r", encoding="utf-8") as file:
-        datos = file.read()
-    return datos
-
-def convert_html(texto): # Devuelve el texto formateado a html
-    texto = texto.split("\n")
-    html = ""
-    for linea in texto:
-        if not linea:
-            print("Linea vacia")
-        elif (1+1):
-            pass
-    
-    
-    return html
-
-def almacenar(ruta, texto_html): # Almacena el contenido de 'texto_html' en un archivo html con una plantilla
-    html = f'''
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Document</title>
-        </head>
-        <body>
-            {texto_html}
-        </body>
-        </html>
-    '''
-    with open(ruta, "w", encoding="utf-8") as file:
-        file.write(html)
-
-if __name__=="__main__":
-    contenido_txt = leer(ruta_texto)
-    html = convert_html(contenido_txt)
-    almacenar(ruta_html, html)
+# Almacenamos el contenido del archivo de texto
+with open(ruta_texto, "r", encoding="utf-8") as file:
+    contenido_texto:str = file.read()
+# Convertimos el contenido en HTML
+html:str = markdown.markdown(contenido_texto, extensions=["extra"])
+html = html.split("\n")
+# Conseguimos el html base
+with open(ruta_html_base, "r", encoding="utf-8") as file:
+    html_base:list = file.readlines()
+# Buscamos el indice de </body> en la lista 'html_base'
+patron_cierre_body = r"^\s*</body>\s*$" # Patrón de búsqueda para </body>
+for i, linea in enumerate(html_base):
+    if re.match(patron_cierre_body, linea):
+        index:int = i
+        break
+# Añadimos un salto de pagina al final de cada linea en el html
+html = list(map(lambda linea: linea+"\n", html))
+# Introducimos el html en la lista 'html_base' dentro de la etiqueta <body>
+for linea in html:
+    html_base.insert(index, linea)
+    index += 1
+html = html_base
+# Almacenamos el html en un archivo
+with open(ruta_html_nuevo, "w", encoding="utf-8") as file:
+    list(map(lambda linea: file.write(linea), html))
