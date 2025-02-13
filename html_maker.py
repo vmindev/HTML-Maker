@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 ruta_texto:Path = Path(__file__).parent/"texto.txt"
 ruta_html_nuevo:Path = Path(__file__).parent/"documento.html"
-ruta_html_base:Path = Path(__file__).parent/"base.html"
+ruta_html_base:Path = Path(__file__).parent/"templates/base.html"
 
 def read_lines(ruta_archivo:Path): # Devuelve una lista con el contenido de un archivo
     with open(ruta_archivo, "r", encoding="utf-8") as file:
