@@ -40,9 +40,18 @@ def html_into_html_base(html:list, index:int, base:list): # Devuelve un string c
         texto += linea
     return texto
 
+def obtener_titulo(text:list):
+    title:str
+    for line in text:
+        if line != "\n" and line:
+            title = line.strip("\n").strip("#")
+            break
+    return title
+
 def main(ruta_texto:Path, ruta_html_base:Path, ruta_html_nuevo:Path):
     # Almacenamos el contenido de los archivos
     texto_list:list = read_lines(ruta_texto)
+    titulo = obtener_titulo(texto_list)
     html_base:list = read_lines(ruta_html_base)
     # Arreglamos el formato de las listas
     texto:str = fix_list_format(texto_list)
@@ -61,3 +70,4 @@ def main(ruta_texto:Path, ruta_html_base:Path, ruta_html_nuevo:Path):
     # Almacenamos el html en un archivo
     with open(ruta_html_nuevo, "w", encoding="utf-8") as file:
         file.write(html)
+    return titulo
