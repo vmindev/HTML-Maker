@@ -3,10 +3,6 @@ import markdown
 from pathlib import Path
 from bs4 import BeautifulSoup
 
-ruta_texto:Path = Path(__file__).parent/"texto.txt"
-ruta_html_nuevo:Path = Path(__file__).parent/"documento.html"
-ruta_html_base:Path = Path(__file__).parent/"templates/base.html"
-
 def read_lines(ruta_archivo:Path): # Devuelve una lista con el contenido de un archivo
     with open(ruta_archivo, "r", encoding="utf-8") as file:
         contenido:list = file.readlines()
@@ -44,7 +40,7 @@ def html_into_html_base(html:list, index:int, base:list): # Devuelve un string c
         texto += linea
     return texto
 
-if __name__=="__main__":
+def main(ruta_texto:Path, ruta_html_base:Path, ruta_html_nuevo:Path):
     # Almacenamos el contenido de los archivos
     texto_list:list = read_lines(ruta_texto)
     html_base:list = read_lines(ruta_html_base)

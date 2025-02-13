@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+        Document
+    </title>
+    <link href="styles/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="sidebar">
+            <h2>
+                Otros documentos
+            </h2>
+            <a href="#">
+                Documento 1
+            </a>
+            <a href="#">
+                Documento 2
+            </a>
+            <a href="#">
+                Documento 3
+            </a>
+            <a href="#">
+                Documento 4
+            </a>
+        </div>
+        <div class="main">
+            <div class="content">
+                <h1>
+                    Introducción a MySQL y PostgreSQL
+                </h1>
+                <h2>
+                    1. Diferencias entre SQLite, MySQL y PostgreSQL
+                </h2>
+                <h3>
+                    1.1. SQLite
+                </h3>
+                <ul>
+                    <li>
+                        <strong>
+                            Bases de datos lightweight
+                        </strong>
+                        : disenado para dispositivos móviles y de bassa capacidad.
+                    </li>
+                    <li>
+                        <strong>
+                            No es relationales
+                        </strong>
+                        : No admite tables complejas ni operaciones de join.
+                    </li>
+                    <li>
+                        <strong>
+                            Instalación fácil
+                        </strong>
+                        : incluido en la distribución de Android y iOS.
+                    </li>
+                </ul>
+                <h3>
+                    1.2. MySQL
+                </h3>
+                <ul>
+                    <li>
+                        <strong>
+                            Base de datos relationales robusta
+                        </strong>
+                        : amplamente utilizado para aplicación web, portable y de alto rendimiento.
+                    </li>
+                    <li>
+                        <strong>
+                            Soporte para bases grandes
+                        </strong>
+                        : eficiente en el manejo de datos y querys complejos.
+                    </li>
+                    <li>
+                        <strong>
+                            Extensión del lenguaje SQL
+                        </strong>
+                        : admite funciones stored procedures, trigonometría, etc.
+                    </li>
+                </ul>
+                <h3>
+                    1.3. PostgreSQL
+                </h3>
+                <ul>
+                    <li>
+                        <strong>
+                            Base de datos relationales robusta y versátil
+                        </strong>
+                        : Soporte para bases complejas con soporte para transacciones, pg_hba.conf para autenticación de
+                        múltiples usuarios.
+                    </li>
+                    <li>
+                        <strong>
+                            Soporte para el lenguaje PL/pgSQL
+                        </strong>
+                        : permite programar en SQL.
+                    </li>
+                    <li>
+                        <strong>
+                            Extended Functionality
+                        </strong>
+                        : soporte para el manejo de geográfico, temporal, etc.
+                    </li>
+                </ul>
+                <hr />
+                <h2>
+                    2. Instalación y configuración de MySQL y PostgreSQL
+                </h2>
+                <h3>
+                    2.1. Instalación de MySQL
+                </h3>
+                <ul>
+                    <li>
+                        <strong>
+                            Para Windows
+                        </strong>
+                        :
+                    </li>
+                    <li>
+                        Descargar el ISO de MySQL de
+                        <a href="https://www.catrix.com/">
+                            https://www.catrix.com/
+                        </a>
+                        .
+                    </li>
+                    <li>
+                        Copiar el ISO al drive.
+                    </li>
+                    <li>
+                        Configurar la base de datos en el sistema de control de MySQL.
+                    </li>
+                    <li>
+                        <strong>
+                            Para Linux
+                        </strong>
+                        :
+                    </li>
+                    <li>
+                        Instalar el paquete official de MySQL.
+                    </li>
+                    <li>
+                        Configurar la base de datos en /var/lib/mysql.
+                    </li>
+                </ul>
+                <h3>
+                    2.2. Instalación de PostgreSQL
+                </h3>
+                <ul>
+                    <li>
+                        <strong>
+                            Para Windows
+                        </strong>
+                        :
+                    </li>
+                    <li>
+                        Descargar PostgreSQL from
+                        <a href="https://www.postgresql.org/">
+                            https://www.postgresql.org/
+                        </a>
+                        .
+                    </li>
+                    <li>
+                        Extractar y instalar según el sistema operativo.
+                    </li>
+                    <li>
+                        Configurar la base de datos en PostgreSQL \averduras\config.
+                    </li>
+                </ul>
+                <h3>
+                    2.3. Configuración básica
+                </h3>
+                <ul>
+                    <li>
+                        Ambas bases de datos requieren configuración de:
+                    </li>
+                    <li>
+                        Base de datos: nombre, usuario, contraseña.
+                    </li>
+                    <li>
+                        Diréctors: ubicación del directorio de configuración.
+                    </li>
+                    <li>
+                        Acceso a la base de datos: remoto o local.
+                    </li>
+                </ul>
+                <hr />
+                <h2>
+                    3. Conexión a MySQL/PostgreSQL con mysql-connector y psycopg2
+                </h2>
+                <h3>
+                    3.1./mysql-connector
+                </h3>
+                <ul>
+                    <li>
+                        <strong>
+                            Instalación
+                        </strong>
+                        :
+                        <pre>bash<code>
+        
+  pip install mysql-connector-python
+       </code></pre>
+                    </li>
+                    <li>
+                        <strong>
+                            Conexión básica
+                        </strong>
+                        :
+                        <pre>python<code>
+        
+  import mysql.connector
+
+  cnx = mysql.connector.connect(
+      host="localhost",
+      user="username",
+      password="password"
+  )
+
+  cursor = cnx.cursor()
+
+  cursor.execute("SELECT COUNT(*) FROM users")
+
+  results = cursor.fetchall()
+
+  for row in results:
+      print(row)
+
+  cnx.close()
+       </code></pre>
+                    </li>
+                </ul>
+                <h3>
+                    3.2. psycopg2
+                </h3>
+                <ul>
+                    <li>
+                        <strong>
+                            Instalación
+                        </strong>
+                        :
+                        <pre>bash<code>
+
+  pip install psycopg2-binary
+</code> </pre>
+                    </li>
+                    <li>
+                        <strong>
+                            Conexión básica
+                        </strong>
+                        :
+                        <pre>python<code>
+        
+  import psycopg2
+  conn = psycopg2.connect(
+      host="localhost",
+      database="mydb",
+      user="username",
+      password="password"
+  )
+  cursor = conn.cursor()
+  cursor.execute("SELECT COUNT(*) FROM users")
+  rows = cursor.fetchall()
+  for row in rows:
+      print(row)
+  conn.close()
+       </code></pre>
+                    </li>
+                </ul>
+                <hr />
+                <h2>
+                    4. Uso de claves primarias, claves foráneas y relaciones entre tablas
+                </h2>
+                <h3>
+                    4.1. Clave Primaria
+                </h3>
+                <ul>
+                    <li>
+                        <strong>
+                            Definición
+                        </strong>
+                        : clave que identifica unívocamente una fila en una tabla.
+                    </li>
+                    <li>
+                        <strong>
+                            Ejemplo
+                        </strong>
+                        :
+                        <pre>sql<code>
+        
+  CREATE TABLE Employees (
+      emp_id SERIAL PRIMARY KEY,
+      emp_name VARCHAR(255),
+      emp_salary INTEGER
+  );
+       </code></pre>
+                    </li>
+                </ul>
+                <h3>
+                    4.2. Clave Foránea
+                </h3>
+                <ul>
+                    <li>
+                        <strong>
+                            Definición
+                        </strong>
+                        : clave que relaciona dos tablas pero no es unívoca.
+                    </li>
+                    <li>
+                        <strong>
+                            Ejemplo
+                        </strong>
+                        :
+                </ul>
+                <pre>sql<code>
+    CREATE TABLE Departments (
+        dept_id SERIAL PRIMARY KEY, dept_name VARCHAR(255)
+        );
+    CREATE TABLE Employees (
+        emp_id SERIAL PRIMARY KEY,
+        dept_id INTEGER,
+        emp_name VARCHAR(255),
+        emp_salary INTEGER
+    );
+    ALTER TABLE Employees SET CONSTRAINT fk_dept_id FOREIGN KEY (dept_id)
+    REFERENCES Departments(dept_id);
+                </code></pre>
+
+                <h3>
+                    4.3. Relaciones entre tablas
+                </h3>
+                <ul>
+                    <li>
+                        <strong>joins</strong>: Operación SQL que combina filas de dos o más tablas relacionadas.
+                    </li>
+                    <li>
+                        <strong>
+                            Ejemplo de join por clave foránea
+                        </strong>
+                        :
+                        <pre>sql<code>
+        
+  SELECT e.* FROM Employees e JOIN Departments d ON e.dept_id = d.dept_id;
+       </code></pre>
+                    </li>
+                </ul>
+                <hr />
+                <p>
+                    Este documento debería ayudarte a entender los conceptos básicos de MySQL y PostgreSQL, así
+                    como
+                    cómo integrarlas en tu entorno de trabajo usando Python. Si necesitas más detalles o
+                    ejemplos, no
+                    dudes en pedírmelo!
+                </p>
+                <span>
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -7,7 +7,23 @@ body {
     background-color: #1e1e1e;
     color: #e0e0e0;
 }
-/* #121212  #1e1e1e */
+pre {
+    background-color: #101010;
+    padding: 10px;
+    border-left: 5px solid #717c82;
+    font-size: 16px;
+    white-space: pre-wrap; /* Permite que las líneas se ajusten dentro del bloque */
+    word-wrap: break-word; /* Permite que las palabras largas se dividan y ajusten */
+}
+pre code{
+    background-color: #101010;
+}
+code {
+    background-color: #202020;
+}
+.content a {
+    color: #92b9c8;
+}
 .sidebar {
     width: 15%;
     background-color: #121212;
@@ -42,13 +58,4 @@ body {
     text-decoration: none;
     display: block;
     margin-bottom: 10px;
-}
-pre {
-    background-color: #101010;
-    padding: 15px;
-    border-left: 5px solid #717c82;
-    font-size: 16px;
-}
-code {
-    background-color: #101010;
 }
