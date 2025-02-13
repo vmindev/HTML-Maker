@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Document</title>
+    <link href="styles/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="sidebar">
+        <h2>Otros documentos</h2>
+        <a href="#"> Documento 1 </a>
+        <a href="#"> Documento 2 </a>
+        <a href="#"> Documento 3 </a>
+        <a href="#"> Documento 4 </a>
+      </div>
+      <div class="main">
+        <div class="content">
+          <h1>Integración con Aplicaciones Web</h1>
+          <h2>🔹 Integrar bases de datos en aplicaciones Flask/Django</h2>
+          <h3>Flask con SQLAlchemy</h3>
+          <p>
+            Flask usa SQLAlchemy para interactuar con bases de datos
+            relacionales.
+          </p>
+          <pre><code class="language-python">from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mi_base.db'
+db = SQLAlchemy(app)
+
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+
+db.create_all()
+</code></pre>
+          <h3>Django con ORM</h3>
+          <p>Django tiene un ORM integrado para manejar bases de datos.</p>
+          <pre><code class="language-python">from django.db import models
+
+class Usuario(models.Model):
+    nombre = models.CharField(max_length=100)
+</code></pre>
+          <p>
+            Configurar la base de datos en
+            <code> settings.py </code>
+            :
+          </p>
+          <pre><code class="language-python">DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+</code></pre>
+          <p>Ejecutar migraciones:</p>
+          <pre><code class="language-sh">python manage.py makemigrations
+python manage.py migrate
+</code></pre>
+          <hr />
+          <h2>
+            🔹 Creación de una API REST para interactuar con la base de datos
+          </h2>
+          <h3>Flask con Flask-RESTful</h3>
+          <pre><code class="language-python">from flask import Flask, request
+from flask_restful import Api, Resource
+
+app = Flask(__name__)
+api = Api(app)
+
+class Usuario(Resource):
+    def get(self):
+        return {"mensaje": "Lista de usuarios"}
+
+api.add_resource(Usuario, "/usuarios")
+
+if __name__ == "__main__":
+    app.run(debug=True)
+</code></pre>
+          <h3>Django con Django REST Framework (DRF)</h3>
+          <p>Instalar DRF:</p>
+          <pre><code class="language-sh">pip install djangorestframework
+</code></pre>
+          <p>Definir la vista:</p>
+          <pre><code class="language-python">from rest_framework import viewsets
+from .models import Usuario
+from .serializers import UsuarioSerializer
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+</code></pre>
+          <p>
+            Definir el
+            <code> serializer </code>
+            :
+          </p>
+          <pre><code class="language-python">from rest_framework import serializers
+from .models import Usuario
+
+class UsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = '__all__'
+</code></pre>
+          <p>
+            Configurar las rutas en
+            <code> urls.py </code>
+            :
+          </p>
+          <pre><code class="language-python">from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import UsuarioViewSet
+
+router = DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet)
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
+</code></pre>
+          <hr />
+          <h2>
+            🔹 Seguridad en bases de datos: inyección SQL, hashing de
+            contraseñas
+          </h2>
+          <h3>Prevención de Inyección SQL</h3>
+          <p>
+            Usar consultas parametrizadas en lugar de concatenación de strings:
+          </p>
+          <pre><code class="language-python">cursor.execute("SELECT * FROM usuarios WHERE nombre = ?", (nombre,))
+</code></pre>
+          <h3>Hashing de contraseñas</h3>
+          <p>
+            Usar
+            <code> bcrypt </code>
+            para almacenar contraseñas de manera segura:
+          </p>
+          <pre><code class="language-python">import bcrypt
+
+password = "secreto".encode('utf-8')
+hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+
+if bcrypt.checkpw(password, hashed):
+    print("Contraseña correcta")
+</code></pre>
+          <hr />
+          <h2>🔹 Despliegue de aplicaciones con bases de datos en la nube</h2>
+          <h3>Opciones de despliegue</h3>
+          <ul>
+            <li>
+              <strong> Heroku </strong>
+              : Ideal para aplicaciones pequeñas y medianas.
+            </li>
+            <li>
+              <strong> AWS RDS </strong>
+              : Para bases de datos escalables en la nube.
+            </li>
+            <li>
+              <strong> Google Cloud SQL </strong>
+              : Integración con otros servicios de Google.
+            </li>
+          </ul>
+          <h3>Desplegar Flask en Heroku</h3>
+          <pre><code class="language-sh">git init
+git add .
+git commit -m "Primer commit"
+heroku create mi-app
+heroku addons:create heroku-postgresql:hobby-dev
+heroku config:set FLASK_APP=app.py
+heroku config:set DATABASE_URL=$(heroku config:get DATABASE_URL)
+git push heroku main
+heroku open
+</code></pre>
+          <h3>Desplegar Django en AWS RDS</h3>
+          <p>
+            Configurar
+            <code> DATABASES </code>
+            en
+            <code> settings.py </code>
+            :
+          </p>
+          <pre><code class="language-python">DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mi_base',
+        'USER': 'mi_usuario',
+        'PASSWORD': 'mi_contraseña',
+        'HOST': 'mi-endpoint.rds.amazonaws.com',
+        'PORT': '5432',
+    }
+}
+</code></pre>
+          <p>
+            Con estos conceptos, puedes integrar y desplegar bases de datos en
+            aplicaciones web de forma segura y eficiente. 🚀
+          </p>
+          <span> </span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

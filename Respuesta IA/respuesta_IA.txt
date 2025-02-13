@@ -1,109 +1,170 @@
-# Introducción a MySQL y PostgreSQL
+# Integración con Aplicaciones Web
 
-## 1. Diferencias entre SQLite, MySQL y PostgreSQL
-SQLite, MySQL y PostgreSQL son sistemas de gestión de bases de datos (DBMS) con diferentes enfoques y capacidades:
+## 🔹 Integrar bases de datos en aplicaciones Flask/Django
 
-| Característica  | SQLite  | MySQL  | PostgreSQL  |
-|---|---|---|---|
-| Tipo | Base de datos embebida | Relacional, cliente-servidor | Relacional, cliente-servidor |
-| Escalabilidad | Pequeños proyectos, apps locales | Mediana a gran escala | Gran escala, alto rendimiento |
-| Soporte de ACID | Sí | Sí (depende del motor de almacenamiento) | Sí |
-| Soporte de JSON | Básico | Intermedio | Avanzado |
-| Extensibilidad | Limitada | Media | Alta (soporta funciones en varios lenguajes) |
-| Uso típico | Aplicaciones móviles y locales | Web y empresas | Analítica, big data, sistemas complejos |
-
-## 2. Instalación y Configuración de MySQL y PostgreSQL
-
-### Instalación de MySQL
-#### En Linux (Ubuntu/Debian)
-```sh
-sudo apt update
-sudo apt install mysql-server
-sudo systemctl start mysql
-```
-#### En Windows
-- Descargar el instalador desde [https://dev.mysql.com/downloads/](https://dev.mysql.com/downloads/)
-- Seguir las instrucciones del asistente
-
-#### Configuración Básica
-```sh
-sudo mysql_secure_installation
-```
-
-### Instalación de PostgreSQL
-#### En Linux (Ubuntu/Debian)
-```sh
-sudo apt update
-sudo apt install postgresql postgresql-contrib
-sudo systemctl start postgresql
-```
-#### En Windows
-- Descargar el instalador desde [https://www.postgresql.org/download/](https://www.postgresql.org/download/)
-- Seguir el asistente de instalación
-
-#### Configuración Básica
-```sh
-sudo -u postgres psql
-ALTER USER postgres PASSWORD 'nueva_contraseña';
-```
-
-## 3. Conexión a MySQL/PostgreSQL con `mysql-connector` y `psycopg2`
-
-### Conectar a MySQL con `mysql-connector`
+### Flask con SQLAlchemy
+Flask usa SQLAlchemy para interactuar con bases de datos relacionales.
 ```python
-import mysql.connector
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-conexion = mysql.connector.connect(
-    host="localhost",
-    user="usuario",
-    password="contraseña",
-    database="mi_base_de_datos"
-)
-cursor = conexion.cursor()
-cursor.execute("SELECT VERSION()")
-print(cursor.fetchone())
-conexion.close()
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mi_base.db'
+db = SQLAlchemy(app)
+
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+
+db.create_all()
 ```
 
-### Conectar a PostgreSQL con `psycopg2`
+### Django con ORM
+Django tiene un ORM integrado para manejar bases de datos.
 ```python
-import psycopg2
+from django.db import models
 
-conexion = psycopg2.connect(
-    host="localhost",
-    user="usuario",
-    password="contraseña",
-    database="mi_base_de_datos"
-)
-cursor = conexion.cursor()
-cursor.execute("SELECT version();")
-print(cursor.fetchone())
-conexion.close()
+class Usuario(models.Model):
+    nombre = models.CharField(max_length=100)
 ```
 
-## 4. Uso de Claves Primarias, Claves Foráneas y Relaciones entre Tablas
-
-### Clave Primaria
-Una clave primaria es un identificador único de cada registro en una tabla.
-```sql
-CREATE TABLE usuarios (
-    id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
-);
+Configurar la base de datos en `settings.py`:
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 ```
 
-### Clave Foránea y Relaciones
-Las claves foráneas permiten establecer relaciones entre tablas.
-```sql
-CREATE TABLE pedidos (
-    id SERIAL PRIMARY KEY,
-    usuario_id INTEGER REFERENCES usuarios(id),
-    producto VARCHAR(100) NOT NULL
-);
+Ejecutar migraciones:
+```sh
+python manage.py makemigrations
+python manage.py migrate
 ```
-
-Este diseño garantiza integridad referencial entre los datos.
 
 ---
 
-Con esto tienes una introducción completa sobre MySQL y PostgreSQL, su instalación, conexión y manejo de relaciones entre tablas.
+## 🔹 Creación de una API REST para interactuar con la base de datos
+
+### Flask con Flask-RESTful
+```python
+from flask import Flask, request
+from flask_restful import Api, Resource
+
+app = Flask(__name__)
+api = Api(app)
+
+class Usuario(Resource):
+    def get(self):
+        return {"mensaje": "Lista de usuarios"}
+
+api.add_resource(Usuario, "/usuarios")
+
+if __name__ == "__main__":
+    app.run(debug=True)
+```
+
+### Django con Django REST Framework (DRF)
+Instalar DRF:
+```sh
+pip install djangorestframework
+```
+
+Definir la vista:
+```python
+from rest_framework import viewsets
+from .models import Usuario
+from .serializers import UsuarioSerializer
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+```
+
+Definir el `serializer`:
+```python
+from rest_framework import serializers
+from .models import Usuario
+
+class UsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = '__all__'
+```
+
+Configurar las rutas en `urls.py`:
+```python
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import UsuarioViewSet
+
+router = DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet)
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
+```
+
+---
+
+## 🔹 Seguridad en bases de datos: inyección SQL, hashing de contraseñas
+
+### Prevención de Inyección SQL
+Usar consultas parametrizadas en lugar de concatenación de strings:
+```python
+cursor.execute("SELECT * FROM usuarios WHERE nombre = ?", (nombre,))
+```
+
+### Hashing de contraseñas
+Usar `bcrypt` para almacenar contraseñas de manera segura:
+```python
+import bcrypt
+
+password = "secreto".encode('utf-8')
+hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+
+if bcrypt.checkpw(password, hashed):
+    print("Contraseña correcta")
+```
+
+---
+
+## 🔹 Despliegue de aplicaciones con bases de datos en la nube
+
+### Opciones de despliegue
+- **Heroku**: Ideal para aplicaciones pequeñas y medianas.
+- **AWS RDS**: Para bases de datos escalables en la nube.
+- **Google Cloud SQL**: Integración con otros servicios de Google.
+
+### Desplegar Flask en Heroku
+```sh
+git init
+git add .
+git commit -m "Primer commit"
+heroku create mi-app
+heroku addons:create heroku-postgresql:hobby-dev
+heroku config:set FLASK_APP=app.py
+heroku config:set DATABASE_URL=$(heroku config:get DATABASE_URL)
+git push heroku main
+heroku open
+```
+
+### Desplegar Django en AWS RDS
+Configurar `DATABASES` en `settings.py`:
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mi_base',
+        'USER': 'mi_usuario',
+        'PASSWORD': 'mi_contraseña',
+        'HOST': 'mi-endpoint.rds.amazonaws.com',
+        'PORT': '5432',
+    }
+}
+```
+
+Con estos conceptos, puedes integrar y desplegar bases de datos en aplicaciones web de forma segura y eficiente. 🚀

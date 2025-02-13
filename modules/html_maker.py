@@ -48,7 +48,7 @@ def obtener_titulo(text:list):
             break
     return title
 
-def main(ruta_texto:Path, ruta_html_base:Path, ruta_html_nuevo:Path):
+def main(ruta_texto:Path, ruta_html_base:Path, dir_ruta_html_nuevo:Path):
     # Almacenamos el contenido de los archivos
     texto_list:list = read_lines(ruta_texto)
     titulo = obtener_titulo(texto_list)
@@ -68,6 +68,5 @@ def main(ruta_texto:Path, ruta_html_base:Path, ruta_html_nuevo:Path):
     soup = BeautifulSoup(html, "html.parser")
     html:str = soup.prettify()
     # Almacenamos el html en un archivo
-    with open(ruta_html_nuevo, "w", encoding="utf-8") as file:
+    with open(dir_ruta_html_nuevo/f"{titulo}.html", "w", encoding="utf-8") as file:
         file.write(html)
-    return titulo

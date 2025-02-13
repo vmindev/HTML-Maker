@@ -30,260 +30,232 @@
    <div class="main">
     <div class="content">
      <h1>
-      Introducción a MySQL y PostgreSQL
+      Integración con Aplicaciones Web
      </h1>
      <h2>
-      1. Diferencias entre SQLite, MySQL y PostgreSQL
+      🔹 Integrar bases de datos en aplicaciones Flask/Django
      </h2>
+     <h3>
+      Flask con SQLAlchemy
+     </h3>
      <p>
-      SQLite, MySQL y PostgreSQL son sistemas de gestión de bases de datos (DBMS) con diferentes enfoques y capacidades:
+      Flask usa SQLAlchemy para interactuar con bases de datos relacionales.
      </p>
-     <table>
-      <thead>
-       <tr>
-        <th>
-         Característica
-        </th>
-        <th>
-         SQLite
-        </th>
-        <th>
-         MySQL
-        </th>
-        <th>
-         PostgreSQL
-        </th>
-       </tr>
-      </thead>
-      <tbody>
-       <tr>
-        <td>
-         Tipo
-        </td>
-        <td>
-         Base de datos embebida
-        </td>
-        <td>
-         Relacional, cliente-servidor
-        </td>
-        <td>
-         Relacional, cliente-servidor
-        </td>
-       </tr>
-       <tr>
-        <td>
-         Escalabilidad
-        </td>
-        <td>
-         Pequeños proyectos, apps locales
-        </td>
-        <td>
-         Mediana a gran escala
-        </td>
-        <td>
-         Gran escala, alto rendimiento
-        </td>
-       </tr>
-       <tr>
-        <td>
-         Soporte de ACID
-        </td>
-        <td>
-         Sí
-        </td>
-        <td>
-         Sí (depende del motor de almacenamiento)
-        </td>
-        <td>
-         Sí
-        </td>
-       </tr>
-       <tr>
-        <td>
-         Soporte de JSON
-        </td>
-        <td>
-         Básico
-        </td>
-        <td>
-         Intermedio
-        </td>
-        <td>
-         Avanzado
-        </td>
-       </tr>
-       <tr>
-        <td>
-         Extensibilidad
-        </td>
-        <td>
-         Limitada
-        </td>
-        <td>
-         Media
-        </td>
-        <td>
-         Alta (soporta funciones en varios lenguajes)
-        </td>
-       </tr>
-       <tr>
-        <td>
-         Uso típico
-        </td>
-        <td>
-         Aplicaciones móviles y locales
-        </td>
-        <td>
-         Web y empresas
-        </td>
-        <td>
-         Analítica, big data, sistemas complejos
-        </td>
-       </tr>
-      </tbody>
-     </table>
-     <h2>
-      2. Instalación y Configuración de MySQL y PostgreSQL
-     </h2>
-     <h3>
-      Instalación de MySQL
-     </h3>
-     <h4>
-      En Linux (Ubuntu/Debian)
-     </h4>
-     <pre><code class="language-sh">sudo apt update
-sudo apt install mysql-server
-sudo systemctl start mysql
-</code></pre>
-     <h4>
-      En Windows
-     </h4>
-     <ul>
-      <li>
-       Descargar el instalador desde
-       <a href="https://dev.mysql.com/downloads/">
-        https://dev.mysql.com/downloads/
-       </a>
-      </li>
-      <li>
-       Seguir las instrucciones del asistente
-      </li>
-     </ul>
-     <h4>
-      Configuración Básica
-     </h4>
-     <pre><code class="language-sh">sudo mysql_secure_installation
-</code></pre>
-     <h3>
-      Instalación de PostgreSQL
-     </h3>
-     <h4>
-      En Linux (Ubuntu/Debian)
-     </h4>
-     <pre><code class="language-sh">sudo apt update
-sudo apt install postgresql postgresql-contrib
-sudo systemctl start postgresql
-</code></pre>
-     <h4>
-      En Windows
-     </h4>
-     <ul>
-      <li>
-       Descargar el instalador desde
-       <a href="https://www.postgresql.org/download/">
-        https://www.postgresql.org/download/
-       </a>
-      </li>
-      <li>
-       Seguir el asistente de instalación
-      </li>
-     </ul>
-     <h4>
-      Configuración Básica
-     </h4>
-     <pre><code class="language-sh">sudo -u postgres psql
-ALTER USER postgres PASSWORD 'nueva_contraseña';
-</code></pre>
-     <h2>
-      3. Conexión a MySQL/PostgreSQL con
-      <code>
-       mysql-connector
-      </code>
-      y
-      <code>
-       psycopg2
-      </code>
-     </h2>
-     <h3>
-      Conectar a MySQL con
-      <code>
-       mysql-connector
-      </code>
-     </h3>
-     <pre><code class="language-python">import mysql.connector
+     <pre><code class="language-python">from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-conexion = mysql.connector.connect(
-    host="localhost",
-    user="usuario",
-    password="contraseña",
-    database="mi_base_de_datos"
-)
-cursor = conexion.cursor()
-cursor.execute("SELECT VERSION()")
-print(cursor.fetchone())
-conexion.close()
-</code></pre>
-     <h3>
-      Conectar a PostgreSQL con
-      <code>
-       psycopg2
-      </code>
-     </h3>
-     <pre><code class="language-python">import psycopg2
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mi_base.db'
+db = SQLAlchemy(app)
 
-conexion = psycopg2.connect(
-    host="localhost",
-    user="usuario",
-    password="contraseña",
-    database="mi_base_de_datos"
-)
-cursor = conexion.cursor()
-cursor.execute("SELECT version();")
-print(cursor.fetchone())
-conexion.close()
-</code></pre>
-     <h2>
-      4. Uso de Claves Primarias, Claves Foráneas y Relaciones entre Tablas
-     </h2>
-     <h3>
-      Clave Primaria
-     </h3>
-     <p>
-      Una clave primaria es un identificador único de cada registro en una tabla.
-     </p>
-     <pre><code class="language-sql">CREATE TABLE usuarios (
-    id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
-);
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+
+db.create_all()
 </code></pre>
      <h3>
-      Clave Foránea y Relaciones
+      Django con ORM
      </h3>
      <p>
-      Las claves foráneas permiten establecer relaciones entre tablas.
+      Django tiene un ORM integrado para manejar bases de datos.
      </p>
-     <pre><code class="language-sql">CREATE TABLE pedidos (
-    id SERIAL PRIMARY KEY,
-    usuario_id INTEGER REFERENCES usuarios(id),
-    producto VARCHAR(100) NOT NULL
-);
+     <pre><code class="language-python">from django.db import models
+
+class Usuario(models.Model):
+    nombre = models.CharField(max_length=100)
 </code></pre>
      <p>
-      Este diseño garantiza integridad referencial entre los datos.
+      Configurar la base de datos en
+      <code>
+       settings.py
+      </code>
+      :
      </p>
+     <pre><code class="language-python">DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+</code></pre>
+     <p>
+      Ejecutar migraciones:
+     </p>
+     <pre><code class="language-sh">python manage.py makemigrations
+python manage.py migrate
+</code></pre>
      <hr/>
+     <h2>
+      🔹 Creación de una API REST para interactuar con la base de datos
+     </h2>
+     <h3>
+      Flask con Flask-RESTful
+     </h3>
+     <pre><code class="language-python">from flask import Flask, request
+from flask_restful import Api, Resource
+
+app = Flask(__name__)
+api = Api(app)
+
+class Usuario(Resource):
+    def get(self):
+        return {"mensaje": "Lista de usuarios"}
+
+api.add_resource(Usuario, "/usuarios")
+
+if __name__ == "__main__":
+    app.run(debug=True)
+</code></pre>
+     <h3>
+      Django con Django REST Framework (DRF)
+     </h3>
      <p>
-      Con esto tienes una introducción completa sobre MySQL y PostgreSQL, su instalación, conexión y manejo de relaciones entre tablas.
+      Instalar DRF:
+     </p>
+     <pre><code class="language-sh">pip install djangorestframework
+</code></pre>
+     <p>
+      Definir la vista:
+     </p>
+     <pre><code class="language-python">from rest_framework import viewsets
+from .models import Usuario
+from .serializers import UsuarioSerializer
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+</code></pre>
+     <p>
+      Definir el
+      <code>
+       serializer
+      </code>
+      :
+     </p>
+     <pre><code class="language-python">from rest_framework import serializers
+from .models import Usuario
+
+class UsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = '__all__'
+</code></pre>
+     <p>
+      Configurar las rutas en
+      <code>
+       urls.py
+      </code>
+      :
+     </p>
+     <pre><code class="language-python">from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import UsuarioViewSet
+
+router = DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet)
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
+</code></pre>
+     <hr/>
+     <h2>
+      🔹 Seguridad en bases de datos: inyección SQL, hashing de contraseñas
+     </h2>
+     <h3>
+      Prevención de Inyección SQL
+     </h3>
+     <p>
+      Usar consultas parametrizadas en lugar de concatenación de strings:
+     </p>
+     <pre><code class="language-python">cursor.execute("SELECT * FROM usuarios WHERE nombre = ?", (nombre,))
+</code></pre>
+     <h3>
+      Hashing de contraseñas
+     </h3>
+     <p>
+      Usar
+      <code>
+       bcrypt
+      </code>
+      para almacenar contraseñas de manera segura:
+     </p>
+     <pre><code class="language-python">import bcrypt
+
+password = "secreto".encode('utf-8')
+hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+
+if bcrypt.checkpw(password, hashed):
+    print("Contraseña correcta")
+</code></pre>
+     <hr/>
+     <h2>
+      🔹 Despliegue de aplicaciones con bases de datos en la nube
+     </h2>
+     <h3>
+      Opciones de despliegue
+     </h3>
+     <ul>
+      <li>
+       <strong>
+        Heroku
+       </strong>
+       : Ideal para aplicaciones pequeñas y medianas.
+      </li>
+      <li>
+       <strong>
+        AWS RDS
+       </strong>
+       : Para bases de datos escalables en la nube.
+      </li>
+      <li>
+       <strong>
+        Google Cloud SQL
+       </strong>
+       : Integración con otros servicios de Google.
+      </li>
+     </ul>
+     <h3>
+      Desplegar Flask en Heroku
+     </h3>
+     <pre><code class="language-sh">git init
+git add .
+git commit -m "Primer commit"
+heroku create mi-app
+heroku addons:create heroku-postgresql:hobby-dev
+heroku config:set FLASK_APP=app.py
+heroku config:set DATABASE_URL=$(heroku config:get DATABASE_URL)
+git push heroku main
+heroku open
+</code></pre>
+     <h3>
+      Desplegar Django en AWS RDS
+     </h3>
+     <p>
+      Configurar
+      <code>
+       DATABASES
+      </code>
+      en
+      <code>
+       settings.py
+      </code>
+      :
+     </p>
+     <pre><code class="language-python">DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mi_base',
+        'USER': 'mi_usuario',
+        'PASSWORD': 'mi_contraseña',
+        'HOST': 'mi-endpoint.rds.amazonaws.com',
+        'PORT': '5432',
+    }
+}
+</code></pre>
+     <p>
+      Con estos conceptos, puedes integrar y desplegar bases de datos en aplicaciones web de forma segura y eficiente. 🚀
      </p>
      <span>
      </span>
