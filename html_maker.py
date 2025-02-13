@@ -1,6 +1,7 @@
 import re
 import markdown
 from pathlib import Path
+from bs4 import BeautifulSoup
 
 ruta_texto:Path = Path(__file__).parent/"texto.txt"
 ruta_html_nuevo:Path = Path(__file__).parent/"documento.html"
@@ -31,11 +32,11 @@ html = html.split("\n")
 # Conseguimos el html base
 with open(ruta_html_base, "r", encoding="utf-8") as file:
     html_base:list = file.readlines()
-# Buscamos el indice de </body> en la lista 'html_base'
-patron_cierre_body = r"^\s*</body>\s*$" # Patrón de búsqueda para </body>
+# Buscamos el indice de <div class="content"> en la lista 'html_base'
+patron_html = r"^\s*<div class=\"content\">\s*$" # Patrón de búsqueda para <div class="content">
 for i, linea in enumerate(html_base):
-    if re.match(patron_cierre_body, linea):
-        index:int = i
+    if re.match(patron_html, linea):
+        index:int = i+1
         break
 # Añadimos un salto de pagina al final de cada linea en el html
 html = list(map(lambda linea: linea+"\n", html))
@@ -43,7 +44,12 @@ html = list(map(lambda linea: linea+"\n", html))
 for linea in html:
     html_base.insert(index, linea)
     index += 1
-html = html_base
+html = ""
+for linea in html_base:
+    html += linea
+# Corregimos las identaciones HTML
+soup = BeautifulSoup(html, "html.parser")
+html = soup.prettify()
 # Almacenamos el html en un archivo
 with open(ruta_html_nuevo, "w", encoding="utf-8") as file:
-    list(map(lambda linea: file.write(linea), html))
+    file.write(html)

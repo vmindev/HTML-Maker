@@ -1,101 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="styles/style.css" />
-  </head>
-
-  <body>
-    <span></span>
-    <h1>Introducción a Bases de Datos y SQLite en Python</h1>
-    <h2>1. Conceptos Básicos</h2>
-    <h3>¿Qué es una Base de Datos?</h3>
-    <p>
-      Una base de datos es una colección organizada de datos que se almacenan y
-      gestionan de manera eficiente para su acceso, manipulación y consulta. Las
-      bases de datos permiten almacenar grandes volúmenes de información de
-      manera estructurada y facilitar su recuperación.
-    </p>
-    <h3>SQL vs NoSQL</h3>
-    <p>Las bases de datos se pueden clasificar en dos tipos principales:</p>
-    <ol>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Document
+  </title>
+  <link href="styles/style.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <div class="wrapper">
+   <div class="sidebar">
+    <h2>
+     Otros documentos
+    </h2>
+    <a href="#">
+     Documento 1
+    </a>
+    <a href="#">
+     Documento 2
+    </a>
+    <a href="#">
+     Documento 3
+    </a>
+    <a href="#">
+     Documento 4
+    </a>
+   </div>
+   <div class="main">
+    <div class="content">
+     <h1>
+      Introducción a Bases de Datos y SQLite en Python
+     </h1>
+     <h2>
+      1. Conceptos Básicos
+     </h2>
+     <h3>
+      ¿Qué es una Base de Datos?
+     </h3>
+     <p>
+      Una base de datos es una colección organizada de datos que se almacenan y gestionan de manera eficiente para su acceso, manipulación y consulta. Las bases de datos permiten almacenar grandes volúmenes de información de manera estructurada y facilitar su recuperación.
+     </p>
+     <h3>
+      SQL vs NoSQL
+     </h3>
+     <p>
+      Las bases de datos se pueden clasificar en dos tipos principales:
+     </p>
+     <ol>
       <li>
-        <p><strong>Bases de Datos Relacionales (SQL)</strong></p>
-        <ul>
-          <li>Utilizan tablas con filas y columnas.</li>
-          <li>
-            Utilizan el Lenguaje de Consulta Estructurado (SQL) para manipular
-            los datos.
-          </li>
-          <li>
-            Son adecuadas para datos estructurados y relaciones complejas.
-          </li>
-          <li>Ejemplos: MySQL, PostgreSQL, SQLite.</li>
-        </ul>
+       <p>
+        <strong>
+         Bases de Datos Relacionales (SQL)
+        </strong>
+       </p>
+       <ul>
+        <li>
+         Utilizan tablas con filas y columnas.
+        </li>
+        <li>
+         Utilizan el Lenguaje de Consulta Estructurado (SQL) para manipular los datos.
+        </li>
+        <li>
+         Son adecuadas para datos estructurados y relaciones complejas.
+        </li>
+        <li>
+         Ejemplos: MySQL, PostgreSQL, SQLite.
+        </li>
+       </ul>
       </li>
       <li>
-        <p><strong>Bases de Datos No Relacionales (NoSQL)</strong></p>
-        <ul>
-          <li>
-            No usan tablas fijas, sino estructuras como documentos, grafos o
-            almacenes clave-valor.
-          </li>
-          <li>
-            Son más flexibles y escalables para grandes volúmenes de datos.
-          </li>
-          <li>
-            Adecuadas para aplicaciones que requieren alta disponibilidad y
-            escalabilidad horizontal.
-          </li>
-          <li>Ejemplos: MongoDB, Redis, Cassandra.</li>
-        </ul>
+       <p>
+        <strong>
+         Bases de Datos No Relacionales (NoSQL)
+        </strong>
+       </p>
+       <ul>
+        <li>
+         No usan tablas fijas, sino estructuras como documentos, grafos o almacenes clave-valor.
+        </li>
+        <li>
+         Son más flexibles y escalables para grandes volúmenes de datos.
+        </li>
+        <li>
+         Adecuadas para aplicaciones que requieren alta disponibilidad y escalabilidad horizontal.
+        </li>
+        <li>
+         Ejemplos: MongoDB, Redis, Cassandra.
+        </li>
+       </ul>
       </li>
-    </ol>
-    <h3>Ventajas de Usar Bases de Datos</h3>
-    <ul>
+     </ol>
+     <h3>
+      Ventajas de Usar Bases de Datos
+     </h3>
+     <ul>
       <li>
-        <strong>Eficiencia:</strong> Permiten almacenar y recuperar grandes
-        cantidades de datos rápidamente.
+       <strong>
+        Eficiencia:
+       </strong>
+       Permiten almacenar y recuperar grandes cantidades de datos rápidamente.
       </li>
       <li>
-        <strong>Integridad:</strong> Aplican restricciones para garantizar la
-        coherencia de los datos.
+       <strong>
+        Integridad:
+       </strong>
+       Aplican restricciones para garantizar la coherencia de los datos.
       </li>
       <li>
-        <strong>Escalabilidad:</strong> Pueden manejar un crecimiento de datos
-        significativo.
+       <strong>
+        Escalabilidad:
+       </strong>
+       Pueden manejar un crecimiento de datos significativo.
       </li>
       <li>
-        <strong>Seguridad:</strong> Ofrecen mecanismos de control de acceso y
-        autenticación.
+       <strong>
+        Seguridad:
+       </strong>
+       Ofrecen mecanismos de control de acceso y autenticación.
       </li>
-    </ul>
-    <h2>2. Instalación y Uso de SQLite en Python con sqlite3</h2>
-    <h3>¿Qué es SQLite?</h3>
-    <p>
-      SQLite es un sistema de gestión de bases de datos ligero y autónomo que
-      almacena la información en un solo archivo. Es ideal para aplicaciones que
-      necesitan una base de datos integrada sin configuraciones complejas.
-    </p>
-    <h3>Instalación</h3>
-    <p>
-      SQLite viene preinstalado con Python, por lo que no es necesario instalar
-      nada adicional. Sin embargo, puedes verificar su disponibilidad con el
-      siguiente comando:
-    </p>
-    <pre><code class="language-sh">python -c &quot;import sqlite3; print('SQLite disponible')&quot;
+     </ul>
+     <h2>
+      2. Instalación y Uso de SQLite en Python con sqlite3
+     </h2>
+     <h3>
+      ¿Qué es SQLite?
+     </h3>
+     <p>
+      SQLite es un sistema de gestión de bases de datos ligero y autónomo que almacena la información en un solo archivo. Es ideal para aplicaciones que necesitan una base de datos integrada sin configuraciones complejas.
+     </p>
+     <h3>
+      Instalación
+     </h3>
+     <p>
+      SQLite viene preinstalado con Python, por lo que no es necesario instalar nada adicional. Sin embargo, puedes verificar su disponibilidad con el siguiente comando:
+     </p>
+     <pre><code class="language-sh">python -c "import sqlite3; print('SQLite disponible')"
 </code></pre>
-    <h3>Crear y Conectar una Base de Datos</h3>
-    <p>
+     <h3>
+      Crear y Conectar una Base de Datos
+     </h3>
+     <p>
       Para comenzar a usar SQLite en Python, se usa el módulo
-      <code>sqlite3</code>:
-    </p>
-    <pre><code class="language-python">import sqlite3
+      <code>
+       sqlite3
+      </code>
+      :
+     </p>
+     <pre><code class="language-python">import sqlite3
 
 # Conectar a la base de datos (o crearla si no existe)
-conexion = sqlite3.connect(&quot;mi_base_de_datos.db&quot;)
+conexion = sqlite3.connect("mi_base_de_datos.db")
 
 # Crear un cursor para ejecutar comandos SQL
 cursor = conexion.cursor()
@@ -103,13 +158,16 @@ cursor = conexion.cursor()
 # Cerrar la conexión
 conexion.close()
 </code></pre>
-    <h2>3. Operaciones CRUD con SQLite</h2>
-    <p>
-      Las operaciones CRUD (Create, Read, Update, Delete) permiten gestionar los
-      datos en una base de datos.
-    </p>
-    <h3>3.1 Crear una Tabla (CREATE)</h3>
-    <pre><code class="language-python">conexion = sqlite3.connect(&quot;mi_base_de_datos.db&quot;)
+     <h2>
+      3. Operaciones CRUD con SQLite
+     </h2>
+     <p>
+      Las operaciones CRUD (Create, Read, Update, Delete) permiten gestionar los datos en una base de datos.
+     </p>
+     <h3>
+      3.1 Crear una Tabla (CREATE)
+     </h3>
+     <pre><code class="language-python">conexion = sqlite3.connect("mi_base_de_datos.db")
 cursor = conexion.cursor()
 
 cursor.execute('''
@@ -123,20 +181,24 @@ cursor.execute('''
 conexion.commit()
 conexion.close()
 </code></pre>
-    <h3>3.2 Insertar Datos (INSERT)</h3>
-    <pre><code class="language-python">conexion = sqlite3.connect(&quot;mi_base_de_datos.db&quot;)
+     <h3>
+      3.2 Insertar Datos (INSERT)
+     </h3>
+     <pre><code class="language-python">conexion = sqlite3.connect("mi_base_de_datos.db")
 cursor = conexion.cursor()
 
-cursor.execute(&quot;INSERT INTO usuarios (nombre, edad) VALUES (?, ?)&quot;, (&quot;Juan&quot;, 30))
+cursor.execute("INSERT INTO usuarios (nombre, edad) VALUES (?, ?)", ("Juan", 30))
 
 conexion.commit()
 conexion.close()
 </code></pre>
-    <h3>3.3 Leer Datos (SELECT)</h3>
-    <pre><code class="language-python">conexion = sqlite3.connect(&quot;mi_base_de_datos.db&quot;)
+     <h3>
+      3.3 Leer Datos (SELECT)
+     </h3>
+     <pre><code class="language-python">conexion = sqlite3.connect("mi_base_de_datos.db")
 cursor = conexion.cursor()
 
-cursor.execute(&quot;SELECT * FROM usuarios&quot;)
+cursor.execute("SELECT * FROM usuarios")
 usuarios = cursor.fetchall()
 
 for usuario in usuarios:
@@ -144,30 +206,36 @@ for usuario in usuarios:
 
 conexion.close()
 </code></pre>
-    <h3>3.4 Actualizar Datos (UPDATE)</h3>
-    <pre><code class="language-python">conexion = sqlite3.connect(&quot;mi_base_de_datos.db&quot;)
+     <h3>
+      3.4 Actualizar Datos (UPDATE)
+     </h3>
+     <pre><code class="language-python">conexion = sqlite3.connect("mi_base_de_datos.db")
 cursor = conexion.cursor()
 
-cursor.execute(&quot;UPDATE usuarios SET edad = ? WHERE nombre = ?&quot;, (35, &quot;Juan&quot;))
+cursor.execute("UPDATE usuarios SET edad = ? WHERE nombre = ?", (35, "Juan"))
 
 conexion.commit()
 conexion.close()
 </code></pre>
-    <h3>3.5 Eliminar Datos (DELETE)</h3>
-    <pre><code class="language-python">conexion = sqlite3.connect(&quot;mi_base_de_datos.db&quot;)
+     <h3>
+      3.5 Eliminar Datos (DELETE)
+     </h3>
+     <pre><code class="language-python">conexion = sqlite3.connect("mi_base_de_datos.db")
 cursor = conexion.cursor()
 
-cursor.execute(&quot;DELETE FROM usuarios WHERE nombre = ?&quot;, (&quot;Juan&quot;,))
+cursor.execute("DELETE FROM usuarios WHERE nombre = ?", ("Juan",))
 
 conexion.commit()
 conexion.close()
 </code></pre>
-    <h2>Conclusión</h2>
-    <p>
-      SQLite es una excelente opción para gestionar bases de datos livianas en
-      Python. Proporciona un almacenamiento estructurado con operaciones CRUD
-      fáciles de implementar. Con esta introducción, tienes las bases necesarias
-      para comenzar a trabajar con bases de datos en tus proyectos.
-    </p>
-  </body>
+     <h2>
+      Conclusión
+     </h2>
+     <p>
+      SQLite es una excelente opción para gestionar bases de datos livianas en Python. Proporciona un almacenamiento estructurado con operaciones CRUD fáciles de implementar. Con esta introducción, tienes las bases necesarias para comenzar a trabajar con bases de datos en tus proyectos.
+     </p>
+    </div>
+   </div>
+  </div>
+ </body>
 </html>
