@@ -44,7 +44,7 @@ code {
 }
 .wrapper {
     display: flex;
-    width: 100%;
+    width: 85%;
 }
 .main {
     margin-left: 20%;
